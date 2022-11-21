@@ -67,8 +67,32 @@ const SupportedPlatforms = {
     },
     netlify : {
         name : "Netlify",
-        login_redirect : null,
-        dashboard : null
+        login_redirect : "https://app.netlify.com/",
+        dashboard : "https://app.netlify.com/",
+        success_redirect_url : "https://app.netlify.com/sites/fastconfigs-app-name/overview",
+        auth : null,
+        fetch_app_response : {
+            path : [],
+            name_path : [
+                {
+                    key : "name",
+                    actions : null,
+                    type : "string"
+                }
+            ],
+            id_path : [
+                {
+                    key : "id",
+                    actions : null,
+                    type : "string"
+                }
+            ]
+        },
+        fetch_apps_payload : {
+            url : "https://app.netlify.com/access-control/bb-api/api/v1/sites?filter=all",
+            method : "GET",
+            headers : null
+        }
     }
 }
 

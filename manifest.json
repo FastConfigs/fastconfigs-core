@@ -5,7 +5,7 @@
     "version" : "1.0.0",
     "content_scripts" : [
         {
-            "matches" : ["https://dashboard.heroku.com/*"],
+            "matches" : ["https://dashboard.heroku.com/*", "https://app.netlify.com/*"],
             "js" : ["index.js", "helpers.js"]
         }
     ],
@@ -17,6 +17,7 @@
         "tabs"
     ],
     "host_permissions": [
-        "https://dashboard.heroku.com/*"
+        "https://dashboard.heroku.com/*",
+        "https://app.netlify.com/*"
     ]
 }

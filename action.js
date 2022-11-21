@@ -30,6 +30,7 @@ const Initialize = ()=>{
 }
 
 const CheckOrAttemptLogin = ()=>{
+    console.log(CurrentPlatform)
     chrome.tabs.query({ url : `${CurrentPlatform.dashboard}*` }, (tabs)=>{
         if(tabs.length < 1){
             window.open(CurrentPlatform.dashboard, '_blank');

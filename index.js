@@ -6,13 +6,17 @@ chrome.runtime.onMessage.addListener((message) => {
         const app_id = message.id;
         const platform = message.platform;
         let access_token;
-        
-        switch(platform.auth.type){
-            case 'local_storage':
-                access_token = ObjectTraverser(localStorage, platform.auth.path)
-                break;
-            default:
-                break;
+
+        if(!platform.auth){
+            access_token = true;
+        }else{      
+            switch(platform.auth.type){
+                case 'local_storage':
+                    access_token = ObjectTraverser(localStorage, platform.auth.path)
+                    break;
+                default:
+                    break;
+            }
         }
 
         if (!access_token) {
@@ -26,8 +30,10 @@ chrome.runtime.onMessage.addListener((message) => {
                 chrome.runtime.sendMessage({ status: 2, msg: `Importing ${currentKey}...` });
                 let payload2 = {
                     method: platform.configure_app_env_payload.method,
-                    headers: ReplaceObjectValues(platform.configure_app_env_payload.headers, { "fastconfigs-auth-token" : access_token }),
                     body: platform.configure_app_env_payload.body.replaceAll("fastconfigs-env-key", currentKey).replaceAll("fastconfigs-env-value", currentValue)
+                }
+                if(platform.headers){
+                    payload2.headers = ReplaceObjectValues(platform.configure_app_env_payload.headers, { "fastconfigs-auth-token" : access_token });
                 }
                 setTimeout(async () => {
                     return await fetch(`${platform.configure_app_env_payload.url.replaceAll('fastconfigs-app-id', app_id)}`, payload2).then((res) => {
@@ -59,27 +65,36 @@ chrome.runtime.onMessage.addListener((message) => {
         const platform = message.platform;
         let access_token;
         
-        switch(platform.auth.type){
-            case 'local_storage':
-                access_token = ObjectTraverser(localStorage, platform.auth.path)
-                break;
-            default:
-                break;
+        if(!platform.auth){
+            access_token = true;
+        }else{
+            switch(platform.auth.type){
+                case 'local_storage':
+                    access_token = ObjectTraverser(localStorage, platform.auth.path)
+                    break;
+                default:
+                    break;
+            }
         }
+
         if (!access_token) {
             chrome.runtime.sendMessage({ status: 0, msg: `You're not logged in to ${platform.name}` });
         } else {
             const payload = {
-                method: platform.fetch_apps_payload.method,
-                headers: ReplaceObjectValues(platform.fetch_apps_payload.headers, { "fastconfigs-auth-token" : access_token })
+                method: platform.fetch_apps_payload.method
+            }
+            if(platform.headers){
+                payload.headers = ReplaceObjectValues(platform.configure_app_env_payload.headers, { "fastconfigs-auth-token" : access_token });
             }
             fetch(platform.fetch_apps_payload.url, payload).then((res) => {
                 res.json().then((json) => {
                     chrome.runtime.sendMessage({ type: 'loaded-apps', apps: ObjectTraverser(json, platform.fetch_app_response.path) });
                 }).catch(err => {
+                    console.log(err)
                     chrome.runtime.sendMessage({ status: 0, msg: "Unable to retrieve apps" });
                 })
             }).catch(err => {
+                console.log(err)
                 chrome.runtime.sendMessage({ status: 0, msg: "Unable to retrieve apps" });
             })
         }
