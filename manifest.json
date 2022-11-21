@@ -1,0 +1,22 @@
+{
+    "manifest_version" : 3,
+    "name" : "FastConfigs",
+    "description" : "A simple tool used to setup a heroku app environment variable by simply importing an env, text of json file.",
+    "version" : "1.0.0",
+    "content_scripts" : [
+        {
+            "matches" : ["https://dashboard.heroku.com/*"],
+            "js" : ["index.js", "helpers.js"]
+        }
+    ],
+    "action" : {
+        "default_popup" : "popup.html",
+        "default_title" : "FastConfigs"
+    },
+    "permissions": [
+        "tabs"
+    ],
+    "host_permissions": [
+        "https://dashboard.heroku.com/*"
+    ]
+}
