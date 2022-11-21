@@ -32,7 +32,7 @@ chrome.runtime.onMessage.addListener((message) => {
                     method: platform.configure_app_env_payload.method,
                     body: platform.configure_app_env_payload.body.replaceAll("fastconfigs-env-key", currentKey).replaceAll("fastconfigs-env-value", currentValue)
                 }
-                if(platform.headers){
+                if(platform.configure_app_env_payload.headers){
                     payload2.headers = ReplaceObjectValues(platform.configure_app_env_payload.headers, { "fastconfigs-auth-token" : access_token });
                 }
                 setTimeout(async () => {
@@ -83,8 +83,8 @@ chrome.runtime.onMessage.addListener((message) => {
             const payload = {
                 method: platform.fetch_apps_payload.method
             }
-            if(platform.headers){
-                payload.headers = ReplaceObjectValues(platform.configure_app_env_payload.headers, { "fastconfigs-auth-token" : access_token });
+            if(platform.fetch_apps_payload.headers){
+                payload.headers = ReplaceObjectValues(platform.fetch_apps_payload.headers, { "fastconfigs-auth-token" : access_token });
             }
             fetch(platform.fetch_apps_payload.url, payload).then((res) => {
                 res.json().then((json) => {
