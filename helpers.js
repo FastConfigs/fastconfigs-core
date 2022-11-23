@@ -49,6 +49,22 @@ const SupportedPlatforms = {
                 accept: 'application/vnd.heroku+json; version=3.cedar-acm'
             }
         },
+        fetch_former_env_response : {
+            path : []
+        },
+        fetch_former_env_payload : {
+            url : "https://api.heroku.com/apps/fastconfigs-app-id/config-vars",
+            method : "GET",
+            headers : {
+                authorization : `Bearer fastconfigs-auth-token`,
+                accept: 'application/vnd.heroku+json; version=3.cedar-acm',
+                "Content-Type": "application/json"
+            },
+            body : null
+        },
+        configure_app_env_request : {
+            path : []
+        },
         configure_app_env_payload : {
             url : "https://api.heroku.com/apps/fastconfigs-app-id/config-vars",
             method : "PATCH",
@@ -56,19 +72,78 @@ const SupportedPlatforms = {
                 authorization : `Bearer fastconfigs-auth-token`,
                 accept: 'application/vnd.heroku+json; version=3.cedar-acm',
                 "Content-Type": "application/json"
-            },
-            body : '{ "fastconfigs-env-key" : "fastconfigs-env-value" }'
+            }
         }
-    },
-    vercel : {
-        name : "Vercel",
-        login_redirect : null,
-        dashboard : null
     },
     netlify : {
         name : "Netlify",
-        login_redirect : null,
-        dashboard : null
+        login_redirect : "https://app.netlify.com/",
+        dashboard : "https://app.netlify.com/",
+        success_redirect_url : "https://app.netlify.com/sites/fastconfigs-app-name/settings/deploys",
+        auth : null,
+        fetch_app_response : {
+            path : [],
+            name_path : [
+                {
+                    key : "name",
+                    actions : null,
+                    type : "string"
+                }
+            ],
+            id_path : [
+                {
+                    key : "id",
+                    actions : null,
+                    type : "string"
+                }
+            ]
+        },
+        fetch_apps_payload : {
+            url : "https://app.netlify.com/access-control/bb-api/api/v1/sites?filter=all",
+            method : "GET",
+            headers : null
+        },
+        fetch_former_env_response : {
+            path : [
+                {
+                    key : "build_settings",
+                    actions : null,
+                    type : "object"
+                },
+                {
+                    key : "env",
+                    actions : null,
+                    type : "object"
+                }
+            ]
+        },
+        fetch_former_env_payload : {
+            url : "https://app.netlify.com/access-control/bb-api/api/v1/sites/fastconfigs-app-id",
+            method : "GET",
+            headers : null,
+            body : null
+        },
+        configure_app_env_request : {
+            path : [
+                {
+                    key : "build_settings",
+                    actions : null,
+                    type : "object"
+                },
+                {
+                    key : "env",
+                    actions : null,
+                    type : "object"
+                }
+            ]
+        },
+        configure_app_env_payload : {
+            url : "https://app.netlify.com/access-control/bb-api/api/v1/sites/fastconfigs-app-id",
+            method : "PUT",
+            headers : {
+                "content-type": "application/json"
+            },
+        }
     }
 }
 
@@ -116,4 +191,22 @@ const ReplaceObjectValues = (object, pair)=>{
     }
 
     return object;
+}
+
+let CreateObjectFromPath = (path, value)=>{
+    let return_value = value;
+    if(path.length > 0){
+        return_value = {};
+
+        for(let i = 0; i < path.length; i++){
+            if(Object.keys(return_value).length < 1){
+                return_value[`${path[i].key}`] = value;
+            }else{
+                let last_key = Object.keys(return_value)[Object.keys(return_value).length - 1];
+                path.shift();
+                return_value[`${last_key}`] = CreateObjectFromPath(path, value);
+            }
+        }
+    }
+    return return_value;
 }
