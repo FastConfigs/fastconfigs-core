@@ -53,14 +53,14 @@ chrome.runtime.onMessage.addListener(async (message) => {
                     } else {
                         chrome.runtime.sendMessage({ status: 1, msg: `Importation completed, refreshing page.` });
                         setTimeout(() => {
-                            // window.location = platform.success_redirect_url.replaceAll('fastconfigs-app-id', app_id);
+                            window.location = platform.success_redirect_url.replaceAll('fastconfigs-app-id', app_id).replaceAll('fastconfigs-app-name', platform.app_name);
                         }, 1000);
                     }
                 }).catch(err => {
                     console.log(err);
                     chrome.runtime.sendMessage({ status: 0, msg: `Configuration Failed` });
                 })
-            }, 5000);
+            }, 2000);
         }
 
     }

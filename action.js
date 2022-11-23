@@ -71,12 +71,15 @@ chrome.runtime.onMessage.addListener((message)=>{
         console.log(message);
         document.getElementById("stage-1").style.display = "none";
         document.getElementById("stage-2").style.display = "inline-flex";
-        // document.getElementById("stage-1").style.display = "none";
         app_name.innerHTML = "<option value=''>Select App</option>";
+        
+        let platform_app_names = {};
 
         message.apps.forEach((each)=>{
             app_name.innerHTML += `<option value='${ObjectTraverser(each, CurrentPlatform.fetch_app_response.id_path)}'>${ObjectTraverser(each, CurrentPlatform.fetch_app_response.name_path)}</option>`;
+            platform_app_names[`${ObjectTraverser(each, CurrentPlatform.fetch_app_response.id_path)}`] = ObjectTraverser(each, CurrentPlatform.fetch_app_response.name_path)
         });
+        CurrentPlatform.apps = platform_app_names;
     }
 });
 
@@ -178,6 +181,7 @@ continueUpload = (id, file, ext)=>{
                     error_handler.style.color = "red";
                 }else{
                     var herokuTab = tabs[0];
+                    CurrentPlatform.app_name = CurrentPlatform.apps[`${id}`];
                     chrome.tabs.sendMessage(herokuTab.id, {id, action : "import-app-config", config : configPayload, platform : CurrentPlatform});    
                 }
             });

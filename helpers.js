@@ -79,7 +79,7 @@ const SupportedPlatforms = {
         name : "Netlify",
         login_redirect : "https://app.netlify.com/",
         dashboard : "https://app.netlify.com/",
-        success_redirect_url : "https://app.netlify.com/sites/fastconfigs-app-name/overview",
+        success_redirect_url : "https://app.netlify.com/sites/fastconfigs-app-name/settings/deploys",
         auth : null,
         fetch_app_response : {
             path : [],
