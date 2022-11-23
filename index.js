@@ -37,7 +37,7 @@ chrome.runtime.onMessage.addListener(async (message) => {
             let fetchFormerConfigsResponse = await fetchFormerConfigs.json();
             formerConfig = ObjectTraverser(fetchFormerConfigsResponse, platform.fetch_former_env_response.path);
 
-            let newConfig = { ...formerConfig, ...config };
+            let newConfig = CreateObjectFromPath(platform.configure_app_env_request.path, { ...formerConfig, ...config });
 
             let payload2 = {
                 method: platform.configure_app_env_payload.method,
@@ -53,7 +53,7 @@ chrome.runtime.onMessage.addListener(async (message) => {
                     } else {
                         chrome.runtime.sendMessage({ status: 1, msg: `Importation completed, refreshing page.` });
                         setTimeout(() => {
-                            window.location = platform.success_redirect_url.replaceAll('fastconfigs-app-id', app_id);
+                            // window.location = platform.success_redirect_url.replaceAll('fastconfigs-app-id', app_id);
                         }, 1000);
                     }
                 }).catch(err => {
