@@ -33,11 +33,19 @@ chrome.runtime.onMessage.addListener(async (message) => {
                 fetchFormerEnvOptions.headers = ReplaceObjectValues(platform.fetch_former_env_payload.headers, { "fastconfigs-auth-token": access_token });
             }
 
-            let fetchFormerConfigs = await fetch(`${platform.fetch_former_env_payload.url.replaceAll('fastconfigs-app-id', app_id)}`, fetchFormerEnvOptions);
-            let fetchFormerConfigsResponse = await fetchFormerConfigs.json();
-            formerConfig = ObjectTraverser(fetchFormerConfigsResponse, platform.fetch_former_env_response.path);
+            let newConfig;
 
-            let newConfig = CreateObjectFromPath(platform.configure_app_env_request.path, { ...formerConfig, ...config });
+            if(platform.fetch_former_env_payload){
+                let fetchFormerConfigs = await fetch(`${platform.fetch_former_env_payload.url.replaceAll('fastconfigs-app-id', app_id)}`, fetchFormerEnvOptions);
+                let fetchFormerConfigsResponse = await fetchFormerConfigs.json();
+                formerConfig = ObjectTraverser(fetchFormerConfigsResponse, platform.fetch_former_env_response.path);
+    
+                newConfig = CreateObjectFromPath(platform.configure_app_env_request.path, { ...formerConfig, ...config });
+            }else{
+                newConfig = { ...config };
+            }
+
+            newConfig = { ...config };
 
             let payload2 = {
                 method: platform.configure_app_env_payload.method,

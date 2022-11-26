@@ -49,20 +49,23 @@ const SupportedPlatforms = {
                 accept: 'application/vnd.heroku+json; version=3.cedar-acm'
             }
         },
-        fetch_former_env_response : {
-            path : []
-        },
-        fetch_former_env_payload : {
-            url : "https://api.heroku.com/apps/fastconfigs-app-id/config-vars",
-            method : "GET",
-            headers : {
-                authorization : `Bearer fastconfigs-auth-token`,
-                accept: 'application/vnd.heroku+json; version=3.cedar-acm',
-                "Content-Type": "application/json"
-            },
-            body : null
-        },
+        fetch_former_env_payload : null,
+        fetch_former_env_response : null,
+        // fetch_former_env_response : {
+        //     path : []
+        // },
+        // fetch_former_env_payload : {
+        //     url : "https://api.heroku.com/apps/fastconfigs-app-id/config-vars",
+        //     method : "GET",
+        //     headers : {
+        //         authorization : `Bearer fastconfigs-auth-token`,
+        //         accept: 'application/vnd.heroku+json; version=3.cedar-acm',
+        //         "Content-Type": "application/json"
+        //     },
+        //     body : null
+        // },
         configure_app_env_request : {
+            type : "object",
             path : []
         },
         configure_app_env_payload : {
@@ -124,6 +127,7 @@ const SupportedPlatforms = {
             body : null
         },
         configure_app_env_request : {
+            type : "object",
             path : [
                 {
                     key : "build_settings",
@@ -175,7 +179,11 @@ const SupportedPlatforms = {
         },
         fetch_former_env_response : null,
         fetch_former_env_payload : null,
-        configure_app_env_request : null,
+        configure_app_env_request : {
+            type : "array",
+            path : [],
+            each_env_prototype : '{"type" : "encrypted", "key" : "fastconfigs-key", "value" : "fastconfigs-value", "target" : ["development", "production", "preview"]}'
+        },
         configure_app_env_payload : {
             url : "https://vercel.com/api/v10/projects/fastconfigs-app-id/env",
             method : "POST",
