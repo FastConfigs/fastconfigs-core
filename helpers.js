@@ -186,7 +186,7 @@ const SupportedPlatforms = {
         },
         configure_app_env_payload : {
             url : "https://vercel.com/api/v10/projects/fastconfigs-app-id/env",
-            method : "POST",
+            method : "PUT",
             headers : {
                 "content-type" : "application/json; charset=utf-8"
             },
