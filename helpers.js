@@ -149,50 +149,50 @@ const SupportedPlatforms = {
             },
         }
     },
-    vercel : {
-        name : "Vercel",
-        login_redirect : "https://vercel.com/dashboard/",
-        dashboard : "https://vercel.com/dashboard/",
-        success_redirect_url : null,
-        auth : null,
-        fetch_app_response : {
-            path : [],
-            name_path : [
-                {
-                    key : "name",
-                    actions : null,
-                    type : "string"
-                }
-            ],
-            id_path : [
-                {
-                    key : "id",
-                    actions : null,
-                    type : "string"
-                }
-            ]
-        },
-        fetch_apps_payload : {
-            url : "https://vercel.com/api/v2/projects/?limit=all&latestDeployments=0&excludeRepos=__placeholder__",
-            method : "GET",
-            headers : null
-        },
-        fetch_former_env_response : null,
-        fetch_former_env_payload : null,
-        configure_app_env_request : {
-            type : "array",
-            path : [],
-            each_env_prototype : '{"type" : "encrypted", "key" : "fastconfigs-key", "value" : "fastconfigs-value", "target" : ["development", "production", "preview"]}'
-        },
-        configure_app_env_payload : {
-            url : "https://vercel.com/api/v10/projects/fastconfigs-app-id/env",
-            method : "PUT",
-            headers : {
-                "content-type" : "application/json; charset=utf-8"
-            },
-            body : null
-        }
-    }
+    // vercel : {
+    //     name : "Vercel",
+    //     login_redirect : "https://vercel.com/dashboard/",
+    //     dashboard : "https://vercel.com/dashboard/",
+    //     success_redirect_url : null,
+    //     auth : null,
+    //     fetch_app_response : {
+    //         path : [],
+    //         name_path : [
+    //             {
+    //                 key : "name",
+    //                 actions : null,
+    //                 type : "string"
+    //             }
+    //         ],
+    //         id_path : [
+    //             {
+    //                 key : "id",
+    //                 actions : null,
+    //                 type : "string"
+    //             }
+    //         ]
+    //     },
+    //     fetch_apps_payload : {
+    //         url : "https://vercel.com/api/v2/projects/?limit=all&latestDeployments=0&excludeRepos=__placeholder__",
+    //         method : "GET",
+    //         headers : null
+    //     },
+    //     fetch_former_env_response : null,
+    //     fetch_former_env_payload : null,
+    //     configure_app_env_request : {
+    //         type : "array",
+    //         path : [],
+    //         each_env_prototype : '{"type" : "encrypted", "key" : "fastconfigs-key", "value" : "fastconfigs-value", "target" : ["development", "production", "preview"]}'
+    //     },
+    //     configure_app_env_payload : {
+    //         url : "https://vercel.com/api/v10/projects/fastconfigs-app-id/env",
+    //         method : "PUT",
+    //         headers : {
+    //             "content-type" : "application/json; charset=utf-8"
+    //         },
+    //         body : null
+    //     }
+    // }
 }
 
 
