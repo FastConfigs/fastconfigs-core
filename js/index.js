@@ -73,7 +73,7 @@ chrome.runtime.onMessage.addListener(async (message) => {
                     if (res.status != 200) {
                         chrome.runtime.sendMessage({ status: 0, msg: `Failed to import.` });
                     } else {
-                        chrome.runtime.sendMessage({ status: 1, msg: `Importation completed, refreshing page.` });
+                        chrome.runtime.sendMessage({ status: 1, msg: `Importation completed, refreshing page.`, new_percent : 100 });
                         setTimeout(() => {
                             window.location = platform.success_redirect_url.replaceAll('fastconfigs-app-id', app_id).replaceAll('fastconfigs-app-name', platform.app_name);
                         }, 1000);

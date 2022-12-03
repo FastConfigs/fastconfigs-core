@@ -51,6 +51,9 @@ chrome.runtime.onMessage.addListener((message)=>{
         main_progress.style.width = `${message.new_percent}%`;
         if(message.new_percent == 100){
             main_progress.style.background = "green";
+            setTimeout(()=>{
+                window.location.reload();
+            }, 2000);
         }
     }
     if(message.status == 0){
@@ -68,7 +71,6 @@ chrome.runtime.onMessage.addListener((message)=>{
         error_handler.style.color = "yellow";
     }
     if(message.type == "loaded-apps"){
-        console.log(message);
         document.getElementById("stage-1").style.display = "none";
         document.getElementById("stage-2").style.display = "inline-flex";
         app_name.innerHTML = "<option value=''>Select App</option>";
@@ -80,6 +82,7 @@ chrome.runtime.onMessage.addListener((message)=>{
             platform_app_names[`${ObjectTraverser(each, CurrentPlatform.fetch_app_response.id_path)}`] = ObjectTraverser(each, CurrentPlatform.fetch_app_response.name_path)
         });
         CurrentPlatform.apps = platform_app_names;
+        error_handler.innerHTML = ``;
     }
 });
 
