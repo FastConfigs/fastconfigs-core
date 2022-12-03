@@ -6,7 +6,7 @@
     "content_scripts" : [
         {
             "matches" : ["https://dashboard.heroku.com/*", "https://app.netlify.com/*", "https://vercel.com/*"],
-            "js" : ["index.js", "helpers.js"]
+            "js" : ["js/index.js", "js/helpers.js"]
         }
     ],
     "action" : {
