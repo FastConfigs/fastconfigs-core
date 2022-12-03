@@ -2,7 +2,6 @@ console.log("Content script running....");
 chrome.runtime.onMessage.addListener(async (message) => {
     if (message.action == "import-app-config") {
         const config = message.config;
-        const configKeys = Object.keys(config);
         const app_id = message.id;
         const platform = message.platform;
         let access_token;
@@ -22,22 +21,45 @@ chrome.runtime.onMessage.addListener(async (message) => {
         if (!access_token) {
             chrome.runtime.sendMessage({ status: 0, msg: `You're not logged in to ${platform.name}` });
         } else {
+            let newConfig;
 
-            let formerConfig = {};
+            if(platform.configure_app_env_request.type == "array"){
+                let formattedList = [];
+                let keys = Object.keys(config);
+                let objPrototype = platform.configure_app_env_request.each_env_prototype;
 
-            let fetchFormerEnvOptions = {
-                method: platform.fetch_former_env_payload.method
+                for(let i = 0; i < keys.length; i++){
+                    let currentKey = keys[i];
+                    let currentValue = config[`${currentKey}`];
+                    let obj = objPrototype.replaceAll('fastconfigs-key', currentKey);
+                    obj = obj.replaceAll('fastconfigs-value', currentValue);
+                    formattedList.push(JSON.parse(obj));
+                }
+                console.log(formattedList);
+                newConfig = CreateObjectFromPath(platform.configure_app_env_request.path, [...formattedList]);
+            }else{
+                newConfig = CreateObjectFromPath(platform.configure_app_env_request.path, { ...config });
             }
 
-            if (platform.fetch_former_env_payload.headers) {
-                fetchFormerEnvOptions.headers = ReplaceObjectValues(platform.fetch_former_env_payload.headers, { "fastconfigs-auth-token": access_token });
+            if(platform.fetch_former_env_payload){
+                let formerConfig = {};
+    
+                let fetchFormerEnvOptions = {
+                    method: platform.fetch_former_env_payload.method
+                }
+    
+                if (platform.fetch_former_env_payload.headers) {
+                    fetchFormerEnvOptions.headers = ReplaceObjectValues(platform.fetch_former_env_payload.headers, { "fastconfigs-auth-token": access_token });
+                }
+    
+                let fetchFormerConfigs = await fetch(`${platform.fetch_former_env_payload.url.replaceAll('fastconfigs-app-id', app_id)}`, fetchFormerEnvOptions);
+                let fetchFormerConfigsResponse = await fetchFormerConfigs.json();
+                formerConfig = ObjectTraverser(fetchFormerConfigsResponse, platform.fetch_former_env_response.path);
+
+                newConfig = {...newConfig, ...formerConfig};
             }
 
-            let fetchFormerConfigs = await fetch(`${platform.fetch_former_env_payload.url.replaceAll('fastconfigs-app-id', app_id)}`, fetchFormerEnvOptions);
-            let fetchFormerConfigsResponse = await fetchFormerConfigs.json();
-            formerConfig = ObjectTraverser(fetchFormerConfigsResponse, platform.fetch_former_env_response.path);
-
-            let newConfig = CreateObjectFromPath(platform.configure_app_env_request.path, { ...formerConfig, ...config });
+            // newConfig = { ...config };
 
             let payload2 = {
                 method: platform.configure_app_env_payload.method,
